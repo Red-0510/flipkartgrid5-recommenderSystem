@@ -27,6 +27,43 @@ const userSchema = mongoose.Schema({
         required:[true,"Please enter a password"],
         minLength:[6,"password must be atleast 6 characters long"],
     },
+    cart :[
+        {
+            productId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Product",
+            },
+            time:{
+                type:Date,
+            },
+            quantity:{
+                type:Number,
+                default:1,
+            }
+        }
+    ],
+    purchases:[
+        {
+            transactionId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Transaction"
+            },
+            products:[
+                {
+                    productId:{
+                        type:mongoose.Schema.Types.ObjectId,
+                        ref:"User",
+                    },
+                    time:{
+                        type:Date,
+                    },
+                    quantity:{
+                        type:Number
+                    }
+                }
+            ]
+        }
+    ]
 },{
     timestamps:true
 })

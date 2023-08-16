@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken"
+import User from "../models/User.js";
 
 export const sendToken = (user,res)=>{
 
@@ -26,7 +27,9 @@ export const userAuth = async (req,res,next) =>{
         //     res.status(400)
         //     throw new Error("Use admin routes for admin works")
         // }
-        req.user = data
+        const user =await User.findById(data.id).select("-password")
+        console.log(user);
+        req.user = user
         next()
     }
     catch(err){

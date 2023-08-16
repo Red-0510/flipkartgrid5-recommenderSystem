@@ -1,11 +1,17 @@
 import express from "express"
-import { changePassword, createAdmin, forgotPassword, getUser, loginUser, logoutUser, registerUser, resetPassword } from "../controllers/userController.js"
+import { addToCart, changePassword, createAdmin, forgotPassword, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart } from "../controllers/userController.js"
 import { adminAuth, userAuth } from "../utils/auth.js"
 
 
 const router = express.Router()
 
-router.post("/register",registerUser)
+router.post("/register",registerUser);
+
+router.route("/cart")
+        .post(userAuth,addToCart)
+         .patch(userAuth,updateCart)
+
+// router.route("/addToCart",addToCart).get(userAuth,getUser);
 
 router.route("/login")
     .post(loginUser)

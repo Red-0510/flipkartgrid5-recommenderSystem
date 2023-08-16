@@ -80,16 +80,16 @@ export const loginUser = async (req,res,next)=>{
         }
         else{
             
-            const {_id,email,name,role} = user
+            const {_id,email,name,cart,purchases} = user
 
             sendToken(user,res);
 
             res.status(200).json({
                 success:"true",
                 message:"User Logged In Successfully",
-                data:{
-                    _id,email,name,role,
-                },
+                data:
+                {_id,email,name,cart,purchases}
+                ,
             })
         }
     }
@@ -101,8 +101,8 @@ export const loginUser = async (req,res,next)=>{
 // logout user
 export const logoutUser = async(req,res,next)=>{
     try{
-        res.clearCookie(`${req.user.id}`)
-        req.cookies[`${req.user.id}`]=""
+        res.clearCookie(`${req.user._id}`)
+        req.cookies[`${req.user._id}`]=""
         res.status(200).json({
             success:true,
             message:"Successfully Logged out"
@@ -116,8 +116,8 @@ export const logoutUser = async(req,res,next)=>{
 //get User details
 export const getUser = async (req,res,next)=>{
     try{
-        const {id,role} = req.user
-        const user = await User.findById(id).select("-password")
+        const user = req.user
+        // const {_id,role} = user
         
         if(!user){
             res.status(404)
@@ -137,7 +137,7 @@ export const getUser = async (req,res,next)=>{
 
 export const changePassword = async (req,res,next)=>{
     try{
-        const user = await User.findById(req.user.id)
+        const user = await User.findById(req.user._id);
         const {oldPassword,newPassword} = req.body
         if(!oldPassword || !newPassword){
             res.status(400)
@@ -273,6 +273,51 @@ export const resetPassword = async (req,res,next)=>{
     }
 }
 
+export const updateCart = async (req,res,next)=>{
+    try {
+        const {cart} = req.body
+        if(!cart){
+            throw new Error("Cart not found");
+        }
+        const user = await User.findById(req.user._id)
+        console.log(cart)
+        user.cart=cart
+        console.log(user)
+        await user.save();
+        res.status(200).json({
+            success:true,
+            message:"Cart updated",
+            data:user
+        });
+    } catch (err) {
+        next(err)
+    }
+}
+
+export const addToCart = async (req,res,next)=>{
+    try {
+        const {product} = req.body
+        const user = await User.findById(req.user._id);
+        const checkProductIndex =  user.cart.findIndex(p=>p.productId==product.productId);
+        const currDate = Date.now();
+        const cartItem = {productId:product,time:currDate,quantity:1};
+        if(checkProductIndex!=-1){
+            user.cart[checkProductIndex].quantity++;
+        }
+        else{
+            user.cart.push(cartItem);
+        }
+        await user.save();
+        res.status(200).json({
+            success:true,
+            message:"Added to Cart Successfully",
+            data:user.cart
+        })
+
+    } catch (err) {
+        next(err)
+    }
+}
 
 // create a admin user only can be create by another admin user
 export const createAdmin = async (req,res,next)=>{
