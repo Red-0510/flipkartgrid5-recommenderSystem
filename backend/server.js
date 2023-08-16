@@ -6,6 +6,7 @@ import bodyParser from "body-parser"
 import db from "./db.js"
 import errorHandler from "./middlewares/error.js"
 import userRoute from "./routes/userRoute.js"
+import productRoute from "./routes/productRoute.js"
 import cors from "cors"
 
 
@@ -31,6 +32,7 @@ app.use(
 );
 
 app.use("/api/user",userRoute)
+app.use("/api/product",productRoute)
 
 app.get("/",(req,res)=>{
     res.json({
