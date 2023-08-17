@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Switch from "@mui/material/Switch";
@@ -32,12 +32,59 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 
 // Images
 import curved9 from "assets/images/curved-images/curved-6.jpg";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { validateEmail } from "myServices/authService";
+import { loginUser } from "myServices/authService";
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
-  console.log("Here")
+  // console.log("Here")
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  //mine
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [email,setEmail] = useState("")
+  const [password,setPassword] = useState("")
+  const [disable,setDisable] = useState(false)
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!email || !password) {
+      return toast.error("Please enter email and password")
+    }
+    if (password.length < 6) {
+      return toast.error("Passwords must be up to 6 characters")
+    }
+    if (!validateEmail(email)) {
+      return toast.error("Please enter a valid email")
+    }
+
+    const userData={
+      email,
+      password,
+    }
+    console.log(userData)
+
+    try{
+      setDisable(true)
+      const data = await loginUser(userData,dispatch);
+      if(!data){
+        setDisable(false)
+        return
+      }
+      navigate("/");
+    }catch(err){
+      setDisable(false)
+      console.log(err)
+    }
+
+  };
 
   return (
     <CoverLayout
@@ -52,15 +99,15 @@ function SignIn() {
               Email
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="email" placeholder="Email" />
+          <SoftInput type="email" placeholder="Email" name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}} />
         </SoftBox>
         <SoftBox mb={2}>
           <SoftBox mb={1} ml={0.5}>
-            <SoftTypography component="label" variant="caption" fontWeight="bold">
+            <SoftTypography component="label" variant="caption" fontWeight="bold" >
               Password
             </SoftTypography>
           </SoftBox>
-          <SoftInput type="password" placeholder="Password" />
+          <SoftInput type="password" placeholder="Password" name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}} />
         </SoftBox>
         <SoftBox display="flex" alignItems="center">
           <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -74,7 +121,7 @@ function SignIn() {
           </SoftTypography>
         </SoftBox>
         <SoftBox mt={4} mb={1}>
-          <SoftButton variant="gradient" color="info" fullWidth>
+          <SoftButton variant="gradient" color="info" fullWidth onClick={handleSubmit}>
             sign in
           </SoftButton>
         </SoftBox>

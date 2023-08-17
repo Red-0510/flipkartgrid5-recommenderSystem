@@ -380,6 +380,7 @@ export const updatedPurchase = async (req, res, next) => {
 
         })
         findUser.purchases.push({ transactionId:transaction._id, products:cart,time:date });
+        findUser.cart = []
         await findUser.save();
         res.status(201).json({
             success:true,

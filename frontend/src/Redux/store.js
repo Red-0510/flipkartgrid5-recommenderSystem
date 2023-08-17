@@ -1,12 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { userCredentials, userStatus } from './reducers';
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./authSlice";
 
-const MyStore = configureStore({
-    reducer : {
-        userStatus : userStatus,
-        userCredentials : userCredentials,
-    }
-},composeWithDevTools())
-
-export default MyStore;
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+  },
+});
