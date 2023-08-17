@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 const userSchema = mongoose.Schema({
     name:{
         type:String,
-        required: [true, "Please add a name"]
+        // required: [true, "Please add a name"]
     },
     email:{
         type:String,
@@ -47,6 +47,9 @@ const userSchema = mongoose.Schema({
             transactionId:{
                 type:mongoose.Schema.Types.ObjectId,
                 ref:"Transaction"
+            },
+            time:{
+                type:Date
             },
             products:[
                 {

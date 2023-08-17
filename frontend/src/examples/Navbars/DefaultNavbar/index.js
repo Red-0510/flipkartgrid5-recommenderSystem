@@ -145,34 +145,34 @@ function DefaultNavbar({ transparent, light, action }) {
 }
 
 // Setting default values for the props of DefaultNavbar
-DefaultNavbar.defaultProps = {
-  transparent: false,
-  light: false,
-  action: false,
-};
+// DefaultNavbar.defaultProps = {
+//   transparent: false,
+//   light: false,
+//   action: false,
+// };
 
-// Typechecking props for the DefaultNavbar
-DefaultNavbar.propTypes = {
-  transparent: PropTypes.bool,
-  light: PropTypes.bool,
-  action: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.shape({
-      type: PropTypes.oneOf(["external", "internal"]).isRequired,
-      route: PropTypes.string.isRequired,
-      color: PropTypes.oneOf([
-        "primary",
-        "secondary",
-        "info",
-        "success",
-        "warning",
-        "error",
-        "dark",
-        "light",
-      ]),
-      label: PropTypes.string.isRequired,
-    }),
-  ]),
-};
+// // Typechecking props for the DefaultNavbar
+// DefaultNavbar.propTypes = {
+//   transparent: PropTypes.bool,
+//   light: PropTypes.bool,
+//   action: PropTypes.oneOfType([
+//     PropTypes.bool,
+//     PropTypes.shape({
+//       type: PropTypes.oneOf(["external", "internal"]).isRequired,
+//       route: PropTypes.string.isRequired,
+//       color: PropTypes.oneOf([
+//         "primary",
+//         "secondary",
+//         "info",
+//         "success",
+//         "warning",
+//         "error",
+//         "dark",
+//         "light",
+//       ]),
+//       label: PropTypes.string.isRequired,
+//     }),
+//   ]),
+// };
 
 export default DefaultNavbar;

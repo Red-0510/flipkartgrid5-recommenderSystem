@@ -1,3 +1,4 @@
+import "react-toastify/dist/ReactToastify.css";
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
@@ -41,6 +42,11 @@ import SingleProduct from "myComponents/SingleProduct";
 // import ProfileProtectedRoute from "myComponents/ProfileProtectedRoute";
 import ProtectedRoutes from "myComponents/ProtectedRoutes";
 import MyCart from "myComponents/MyCart";
+import MySignUp from "myComponents/MySignUp";
+import MySignIn from "myComponents/MySignIn";
+import { store } from "redux/store";
+import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -152,8 +158,12 @@ export default function App() {
   //     </ThemeProvider>
   //   </CacheProvider>
   // ) : (
-    return (<ThemeProvider theme={theme}>
+    return (
+    <Provider store={store}>
+
+    <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ToastContainer />
       {/* {layout === "dashboard" && (
         <>
           <Sidenav
@@ -180,9 +190,10 @@ export default function App() {
           </Route>
           {/* <Route path="*" element={<Navigate to="/" />} /> */}
         </Route>
-        <Route path="/signin" element={<SignIn/>} key="signin" />
-        <Route path="/signup" element={<SignUp/>} key="signup" />
+        <Route path="/signin" element={<MySignIn/>} key="signin" />
+        <Route path="/signup" element={<MySignUp/>} key="signup" />
       </Routes>
     </ThemeProvider>
+    </Provider>
   );
 }
