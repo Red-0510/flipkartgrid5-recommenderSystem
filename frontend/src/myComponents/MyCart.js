@@ -2,7 +2,7 @@ import {useState} from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import { Button, Rating } from '@mui/material';
+import { Button, IconButton, Rating } from '@mui/material';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import SoftBox from 'components/SoftBox';
@@ -36,9 +36,9 @@ export default function MyCart() {
             }} 
           />
           <SoftBox>
-          <RemoveOutlinedIcon onClick={()=>{setNum(num--)}} style={{display:"inline"}}/>
+          <IconButton onClick={()=>{setNum(num==1?num=1:num--)}}><RemoveOutlinedIcon style={{display:"inline"}}/></IconButton>
             <p style={{display:"inline"}}>{num}</p>
-          <AddOutlinedIcon onClick={()=>{setNum(num++)}} style={{display:"inline"}}/>   
+          <IconButton onClick={()=>{setNum(num++)}} ><AddOutlinedIcon style={{display:"inline"}}/> </IconButton> 
             </SoftBox>       
           <Button variant="contained" color="success">
             BUY

@@ -1,5 +1,5 @@
 import express from "express"
-import { addToCart, changePassword, createAdmin, forgotPassword, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart } from "../controllers/userController.js"
+import { addToCart, buyProduct, changePassword, forgotPassword, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart, updatedPurchase } from "../controllers/userController.js"
 import { adminAuth, userAuth } from "../utils/auth.js"
 
 
@@ -11,7 +11,9 @@ router.route("/cart")
         .post(userAuth,addToCart)
          .patch(userAuth,updateCart)
 
-// router.route("/addToCart",addToCart).get(userAuth,getUser);
+router.route("/buy")
+        .get(userAuth,updatedPurchase)
+        .post(userAuth,buyProduct)
 
 router.route("/login")
     .post(loginUser)
@@ -28,7 +30,7 @@ router.put("/resetpassword/:resetToken",resetPassword)
 
 
 //admin routes
-router.route("/admin")
-    .post(adminAuth,createAdmin)
+// router.route("/admin")
+//     .post(adminAuth,createAdmin)
 
 export default router

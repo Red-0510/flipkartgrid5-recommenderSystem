@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -35,11 +35,65 @@ import Separator from "layouts/authentication/components/Separator";
 
 // Images
 import curved6 from "assets/images/curved-images/curved14.jpg";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { registerUser } from "myServices/authService";
 
 function SignUp() {
   const [agreement, setAgremment] = useState(true);
 
   const handleSetAgremment = () => setAgremment(!agreement);
+
+  //mine
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const [disable,setDisable] = useState(false)
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+console.log(formData)
+    const {email, password, confirmPassword } = formData;
+
+    if (email && password && confirmPassword) {
+      if (password === confirmPassword) {
+        try{
+          setDisable(true)
+          // const name = firstName + " " + lastName
+          const userData = {
+            email,password
+          }
+          const data = await registerUser(userData,dispatch);
+          if(!data){
+            setDisable(false)
+            return
+          }
+          navigate("/");
+        }catch(err){
+          setDisable(false)
+          toast.error("network error please try again later")
+        }
+      } else {
+        return toast.error("Passwords do not match")
+      }
+    } else {
+      return toast.error("Please fill all the fields")
+    }
+  };
 
   return (
     <BasicLayout
@@ -60,13 +114,13 @@ function SignUp() {
         <SoftBox pt={2} pb={3} px={3}>
           <SoftBox component="form" role="form">
             <SoftBox mb={2}>
-              <SoftInput placeholder="Name" />
+              <SoftInput type="email" placeholder="Email" name="email" value={formData.email} onChange={handleInputChange}/>
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="email" placeholder="Email" />
+              <SoftInput type="password" placeholder="Password"  name="password" value={formData.password} onChange={handleInputChange}/>
             </SoftBox>
             <SoftBox mb={2}>
-              <SoftInput type="password" placeholder="Password" />
+              <SoftInput type="password" placeholder="Confirm Password" name="confirmPassword"  value={formData.confirmPassword} onChange={handleInputChange}/>
             </SoftBox>
             <SoftBox display="flex" alignItems="center">
               <Checkbox checked={agreement} onChange={handleSetAgremment} />
@@ -89,7 +143,7 @@ function SignUp() {
               </SoftTypography>
             </SoftBox>
             <SoftBox mt={4} mb={1}>
-              <SoftButton variant="gradient" color="dark" fullWidth>
+              <SoftButton variant="gradient" color="dark" fullWidth onClick={handleSubmit}>
                 sign up
               </SoftButton>
             </SoftBox>
