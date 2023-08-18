@@ -1,6 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import {SET_LOGIN, SET_USER} from "../redux/authSlice"
+import { SET_SIMILAR_PRODUCT } from "redux/productSlice";
+import { SET_PRODUCT } from "redux/productSlice";
+import { SET_USER_RECOMMENDATIONS } from "redux/homeProductSlice";
+import { SET_LOCATION_RECOMMENDATIONS } from "redux/homeProductSlice";
+import { SET_SALES_RECOMMENDATIONS } from "redux/homeProductSlice";
+import { SET_USER_HISTORY } from "redux/homeProductSlice";
+import { SET_AGE_RECOMMENDATIONS } from "redux/homeProductSlice";
+import { SET_ASSOCIABLE_PRODUCT } from "redux/productSlice";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -218,3 +226,54 @@ export const buyProduct = async (productData,dispatch) => {
     toast.error(message);
   }
 };
+
+// get home Product
+export const getHomeProduct = async (productQuery,dispatch) => {
+  try {
+    const response = await axios.get(
+      `${BACKEND_URL}/api/product/home`
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    toast.success(response.data.message);
+    await dispatch(SET_USER_RECOMMENDATIONS(data.data.userRecommendations));
+    await dispatch(SET_LOCATION_RECOMMENDATIONS(data.data.locationRecommendations));
+    await dispatch(SET_SALES_RECOMMENDATIONS(data.data.salesRecommendations));
+    await dispatch(SET_USER_HISTORY(data.data.userHistory));
+    await dispatch(SET_AGE_RECOMMENDATIONS (data.data.ageRecommendations));
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+// get similar and associable Product
+export const getSimilarAndAssociableProduct = async (productId,dispatch) => {
+  try {
+    const response = await axios.get(
+      `${BACKEND_URL}/api/product/singleproduct/${productId}`,
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    toast.success(response.data.message);
+    await dispatch(SET_PRODUCT(data.data.product))
+    await dispatch(SET_SIMILAR_PRODUCT(data.data.similarProducts));
+    await dispatch(SET_ASSOCIABLE_PRODUCT(data.data.associableProducts));
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
