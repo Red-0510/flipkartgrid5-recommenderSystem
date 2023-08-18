@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -12,34 +12,13 @@ import Icon from "@mui/material/Icon";
 // Soft UI Dashboard React components
 import SoftBox from "components/SoftBox";
 
-// Soft UI Dashboard React examples
-import Sidenav from "examples/Sidenav";
-import Configurator from "examples/Configurator";
-
 // Soft UI Dashboard React themes
 import theme from "assets/theme";
-import themeRTL from "assets/theme/theme-rtl";
-
-// RTL plugins
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-
-// Soft UI Dashboard React routes
-import routes from "routes";
-
-// Soft UI Dashboard React contexts
 import { useSoftUIController, setMiniSidenav, setOpenConfigurator } from "context";
-
-// Images
-// import brand from "assets/images/logo-ct.png";
 import MyLayout from "myComponents/MyLayout";
-import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 import MyDashboard from "myComponents/MyDashboard";
 import Profile from "layouts/profile";
 import SingleProduct from "myComponents/SingleProduct";
-// import ProfileProtectedRoute from "myComponents/ProfileProtectedRoute";
 import ProtectedRoutes from "myComponents/ProtectedRoutes";
 import MyCart from "myComponents/MyCart";
 import MySignUp from "myComponents/MySignUp";
@@ -52,18 +31,8 @@ export default function App() {
   const [controller, dispatch] = useSoftUIController();
   const { miniSidenav, direction, layout, openConfigurator, sidenavColor } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
-  const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  // Cache for the rtl
-  // useMemo(() => {
-  //   const cacheRtl = createCache({
-  //     key: "rtl",
-  //     stylisPlugins: [rtlPlugin],
-  //   });
-
-  //   setRtlCache(cacheRtl);
-  // }, []);
 
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
@@ -95,19 +64,6 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  // const getRoutes = (allRoutes) =>
-  //   allRoutes.map((route) => {
-  //     if (route.collapse) {
-  //       return getRoutes(route.collapse);
-  //     }
-
-  //     if (route.route) {
-  //       return <Route exact path={route.route} element={route.component} key={route.key} />;
-  //     }
-
-  //     return null;
-  //   });
-
   const configsButton = (
     <SoftBox
       display="flex"
@@ -131,69 +87,26 @@ export default function App() {
       </Icon>
     </SoftBox>
   );
-
-  // return direction === "rtl" ? (
-  //   <CacheProvider value={rtlCache}>
-  //     <ThemeProvider theme={themeRTL}>
-  //       <CssBaseline />
-  //       {layout === "dashboard" && (
-  //         <>
-  //           <Sidenav
-  //             color={sidenavColor}
-  //             brand={brand}
-  //             brandName="Soft UI Dashboard"
-  //             routes={routes}
-  //             onMouseEnter={handleOnMouseEnter}
-  //             onMouseLeave={handleOnMouseLeave}
-  //           />
-  //           <Configurator />
-  //           {configsButton}
-  //         </>
-  //       )}
-  //       {layout === "vr" && <Configurator />}
-  //       <Routes>
-  //         {getRoutes(routes)}
-  //         <Route path="*" element={<Navigate to="/dashboard" />} />
-  //       </Routes>
-  //     </ThemeProvider>
-  //   </CacheProvider>
-  // ) : (
-    return (
+  return (
     <Provider store={store}>
-
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <ToastContainer />
-      {/* {layout === "dashboard" && (
-        <>
-          <Sidenav
-            color={sidenavColor}
-            brand={brand}
-            brandName="Dashboard"
-            routes={routes}
-            onMouseEnter={handleOnMouseEnter}
-            onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
-        </>
-      )} */}
-      {/* {layout === "vr" && <Configurator />} */}
-      <Routes>
-        <Route element={<MyLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard"/>} />
-          <Route path="/dashboard" element={<MyDashboard />} />
-          <Route path="/singleproduct" element={<SingleProduct />} />
-          <Route element={<ProtectedRoutes/>}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/cart" element={<MyCart />} />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <ToastContainer />
+        <Routes>
+          <Route element={<MyLayout />}>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<MyDashboard />} />
+            <Route path="/singleproduct/:id" element={<SingleProduct />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/cart" element={<MyCart />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
           </Route>
-          {/* <Route path="*" element={<Navigate to="/" />} /> */}
-        </Route>
-        <Route path="/signin" element={<MySignIn/>} key="signin" />
-        <Route path="/signup" element={<MySignUp/>} key="signup" />
-      </Routes>
-    </ThemeProvider>
+          <Route path="/signin" element={<MySignIn />} key="signin" />
+          <Route path="/signup" element={<MySignUp />} key="signup" />
+        </Routes>
+      </ThemeProvider>
     </Provider>
   );
 }
