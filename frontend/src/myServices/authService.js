@@ -277,3 +277,23 @@ export const getSimilarAndAssociableProduct = async (productId,dispatch) => {
   }
 };
 
+export const getSearchResults = async (searchText) => {
+  try {
+    console.log(searchText)
+    const response = await axios.get(
+      `${BACKEND_URL}/api/product/results/${searchText}`,
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};

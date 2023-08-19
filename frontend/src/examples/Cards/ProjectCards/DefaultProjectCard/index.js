@@ -30,7 +30,7 @@ import SoftTypography from "components/SoftTypography";
 import SoftButton from "components/SoftButton";
 import SoftAvatar from "components/SoftAvatar";
 
-function DefaultProjectCard({ image, label, title, description, action, authors }) {
+function DefaultProjectCard({ image, label, title, description, action, authors, company, category }) {
   const renderAuthors = authors.map(({ image: media, name }) => (
     <Tooltip key={name} title={name} placement="bottom">
       <SoftAvatar
@@ -69,6 +69,7 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
           sx={{
             maxWidth: "100%",
             margin: 0,
+            maxHeight: "100%",
             boxShadow: ({ boxShadows: { md } }) => md,
             objectFit: "cover",
             objectPosition: "center",
@@ -108,6 +109,23 @@ function DefaultProjectCard({ image, label, title, description, action, authors 
               {title}
             </SoftTypography>
           )}
+        </SoftBox>
+        <SoftBox>
+          <SoftTypography
+            component="a"
+            href={action.route}
+            target="_blank"
+            rel="noreferrer"
+            variant="h5"
+            textTransform="capitalize"
+          >
+            {category}
+          </SoftTypography>
+        </SoftBox>
+        <SoftBox lineHeight={0}>
+          <SoftTypography variant="button" fontWeight="bold" color="text">
+            {company}
+          </SoftTypography>
         </SoftBox>
         <SoftBox mb={3} lineHeight={0}>
           <SoftTypography variant="button" fontWeight="regular" color="text">
@@ -151,28 +169,28 @@ DefaultProjectCard.defaultProps = {
 };
 
 // Typechecking props for the DefaultProjectCard
-DefaultProjectCard.propTypes = {
-  image: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  action: PropTypes.shape({
-    type: PropTypes.oneOf(["external", "internal"]),
-    route: PropTypes.string.isRequired,
-    color: PropTypes.oneOf([
-      "primary",
-      "secondary",
-      "info",
-      "success",
-      "warning",
-      "error",
-      "light",
-      "dark",
-      "white",
-    ]).isRequired,
-    label: PropTypes.string.isRequired,
-  }).isRequired,
-  authors: PropTypes.arrayOf(PropTypes.object),
-};
+// DefaultProjectCard.propTypes = {
+//   image: PropTypes.string.isRequired,
+//   label: PropTypes.string.isRequired,
+//   title: PropTypes.string.isRequired,
+//   description: PropTypes.string.isRequired,
+//   action: PropTypes.shape({
+//     type: PropTypes.oneOf(["external", "internal"]),
+//     route: PropTypes.string.isRequired,
+//     color: PropTypes.oneOf([
+//       "primary",
+//       "secondary",
+//       "info",
+//       "success",
+//       "warning",
+//       "error",
+//       "light",
+//       "dark",
+//       "white",
+//     ]).isRequired,
+//     label: PropTypes.string.isRequired,
+//   }).isRequired,
+//   authors: PropTypes.arrayOf(PropTypes.object),
+// };
 
 export default DefaultProjectCard;

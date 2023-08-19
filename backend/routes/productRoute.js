@@ -1,5 +1,5 @@
 import express from "express"
-import { addProduct , getHomeProduct, itemItemRecommendation, updateProduct} from "../controllers/productController.js"
+import { addProduct , getHomeProduct, itemItemRecommendation, searchResults, updateProduct} from "../controllers/productController.js"
 import { userAuth } from "../utils/auth.js"
 
 
@@ -13,6 +13,9 @@ const router = express.Router()
 
 router.route("/home")
    .get(getHomeProduct)
+
+router.route("/results/:searchText")
+   .get(searchResults)
 
 router.route("/singleproduct/:productId")
    .get(itemItemRecommendation)

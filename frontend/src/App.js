@@ -26,6 +26,7 @@ import MySignIn from "myComponents/MySignIn";
 import { store } from "redux/store";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
+import MySearchResult from "myComponents/MySearchResult";
 
 export default function App() {
   const [controller, dispatch] = useSoftUIController();
@@ -91,12 +92,13 @@ export default function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ToastContainer />
+        <ToastContainer autoClose={1000} style={{fontFamily:"cursive"}} />
         <Routes>
           <Route element={<MyLayout />}>
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<MyDashboard />} />
             <Route path="/singleproduct/:id" element={<SingleProduct />} />
+            <Route path="/results/:id" element={<MySearchResult />} />
             <Route element={<ProtectedRoutes />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/cart" element={<MyCart />} />
