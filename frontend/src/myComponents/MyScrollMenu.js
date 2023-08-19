@@ -16,13 +16,28 @@ function MyScrollMenu() {
     const userHistoryCards = useSelector(state => state.homeProduct.userHistory);
     const navigate = useNavigate();
 
+    function truncateDescription(text, maxLength) {
+        if (text.length <= maxLength) {
+            return text;
+        } else {
+            return text.slice(0, maxLength - 3) + "...";
+        }
+    }
+    const len = 30
+    const cardStyle = { height: "50%", width: "30rem", margin: "1rem" }
+    const scrollStyle = { overflowX: 'hidden', whiteSpace: 'nowrap', height: '10%', width: '100%', display: 'flex', gap: '2rem' }
     const userRecommendationsCardComp = userRecommendationsCards.map((item, index) => {
         // console.log("hello world")
+        // console.log(item)
         return (
             <MyCard
-                img={item.img}
-                title={item.title}
-                desc={item.desc}
+                sx={cardStyle}
+                category={item.category}
+                company={item.company}
+                img={item.image}
+                title={item.name}
+                desc={truncateDescription(item.description, len)}
+                id={item._id}
                 key={index}
             />
         )
@@ -30,9 +45,13 @@ function MyScrollMenu() {
     const locationRecommendationsCardComp = locationRecommendationsCards.map((item, index) => {
         return (
             <MyCard
-                img={item.img}
-                title={item.title}
-                desc={item.desc}
+                sx={cardStyle}
+                category={item.category}
+                company={item.company}
+                img={item.image}
+                title={item.name}
+                desc={truncateDescription(item.description, len)}
+                id={item._id}
                 key={index}
             />
         )
@@ -40,9 +59,13 @@ function MyScrollMenu() {
     const salesRecommendationsCardComp = salesRecommendationsCards.map((item, index) => {
         return (
             <MyCard
-                img={item.img}
-                title={item.title}
-                desc={item.desc}
+                sx={cardStyle}
+                category={item.category}
+                company={item.company}
+                img={item.image}
+                title={item.name}
+                desc={truncateDescription(item.description, len)}
+                id={item._id}
                 key={index}
             />
         )
@@ -50,9 +73,13 @@ function MyScrollMenu() {
     const ageRecommendationsCardComp = ageRecommendationsCards.map((item, index) => {
         return (
             <MyCard
-                img={item.img}
-                title={item.title}
-                desc={item.desc}
+                sx={cardStyle}
+                category={item.category}
+                company={item.company}
+                img={item.image}
+                title={item.name}
+                desc={truncateDescription(item.description, len)}
+                id={item._id}
                 key={index}
             />
         )
@@ -60,9 +87,13 @@ function MyScrollMenu() {
     const userHistoryCardComp = userHistoryCards.map((item, index) => {
         return (
             <MyCard
-                img={item.img}
-                title={item.title}
-                desc={item.desc}
+                sx={cardStyle}
+                category={item.category}
+                company={item.company}
+                img={item.image}
+                title={item.name}
+                desc={truncateDescription(item.description, len)}
+                id={item._id}
                 key={index}
             />
         )
@@ -73,7 +104,7 @@ function MyScrollMenu() {
             <h2>sale of the day</h2>
             <ScrollMenu>
                 <SoftBox p={2}>
-                    <div style={{ overflowX: 'hidden', whiteSpace: 'nowrap', display: 'flex' }}>
+                    <div style={scrollStyle}>
                         {salesRecommendationsCardComp}
                     </div>
                 </SoftBox>
@@ -84,7 +115,7 @@ function MyScrollMenu() {
             <h2>Recommendations for you</h2>
             <ScrollMenu>
                 <SoftBox p={2}>
-                    <div style={{ overflowX: 'hidden', whiteSpace: 'nowrap', display: 'flex' }}>
+                    <div style={scrollStyle}>
                         {userRecommendationsCardComp}
                     </div>
                 </SoftBox>
@@ -95,7 +126,7 @@ function MyScrollMenu() {
             <h2>Famous in your location</h2>
             <ScrollMenu>
                 <SoftBox p={2}>
-                    <div style={{ overflowX: 'hidden', whiteSpace: 'nowrap', display: 'flex' }}>
+                    <div style={scrollStyle}>
                         {locationRecommendationsCardComp}
                     </div>
                 </SoftBox>
@@ -106,7 +137,7 @@ function MyScrollMenu() {
             <h2>similar user has also bought</h2>
             <ScrollMenu>
                 <SoftBox p={2}>
-                    <div style={{ overflowX: 'hidden', whiteSpace: 'nowrap', display: 'flex' }}>
+                    <div style={scrollStyle}>
                         {ageRecommendationsCardComp}
                     </div>
                 </SoftBox>
@@ -117,7 +148,7 @@ function MyScrollMenu() {
             <h2>you might want to buy again</h2>
             <ScrollMenu>
                 <SoftBox p={2}>
-                    <div style={{ overflowX: 'hidden', whiteSpace: 'nowrap', display: 'flex' }}>
+                    <div style={scrollStyle}>
                         {userHistoryCardComp}
                     </div>
                 </SoftBox>

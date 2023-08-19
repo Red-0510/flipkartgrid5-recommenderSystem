@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -26,18 +26,20 @@ import SoftInputIconRoot from "components/SoftInput/SoftInputIconRoot";
 
 // Soft UI Dashboard React contexts
 import { useSoftUIController } from "context";
-
+import { Navigate, useNavigate } from "react-router-dom";
 const SoftInput = forwardRef(({ size, icon, error, success, disabled, ...rest }, ref) => {
   let template;
   const [controller] = useSoftUIController();
   const { direction } = controller;
   const iconDirection = icon.direction;
+  const navigate = useNavigate();
+  const [searchText,setSearchText] =useState("")
 
   if (icon.component && icon.direction === "left") {
     template = (
       <SoftInputWithIconRoot ref={ref} ownerState={{ error, success, disabled }}>
         <SoftInputIconBoxRoot ownerState={{ size }}>
-          <SoftInputIconRoot fontSize="small" ownerState={{ size }}>
+          <SoftInputIconRoot fontSize="small" ownerState={{ size }} >
             {icon.component}
           </SoftInputIconRoot>
         </SoftInputIconBoxRoot>
@@ -53,9 +55,10 @@ const SoftInput = forwardRef(({ size, icon, error, success, disabled, ...rest },
         <SoftInputRoot
           {...rest}
           ownerState={{ size, error, success, iconDirection, direction, disabled }}
+          onChange={(e)=>{setSearchText(e.target.value)}}
         />
         <SoftInputIconBoxRoot ownerState={{ size }}>
-          <SoftInputIconRoot fontSize="small" ownerState={{ size }}>
+          <SoftInputIconRoot fontSize="small" ownerState={{ size }} onClick={(e)=>{navigate(`/results/${searchText}`)}} >
             {icon.component}
           </SoftInputIconRoot>
         </SoftInputIconBoxRoot>

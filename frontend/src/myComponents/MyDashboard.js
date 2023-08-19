@@ -26,7 +26,7 @@ function MyDashboard() {
         }
       }
       
-      console.log(response);
+      // console.log(response);
       fetchData();
     }, []);
     
