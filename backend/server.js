@@ -8,6 +8,7 @@ import errorHandler from "./middlewares/error.js"
 import userRoute from "./routes/userRoute.js"
 import productRoute from "./routes/productRoute.js"
 import cors from "cors"
+import { generateAndSaveData } from "./cron/userCron.js"
 
 
 dotenv.config()
@@ -30,7 +31,7 @@ app.use(
       credentials:true,
     })
 );
-
+app.get("/danger",generateAndSaveData)
 app.use("/api/user",userRoute)
 app.use("/api/product",productRoute)
 

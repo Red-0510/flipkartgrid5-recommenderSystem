@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const categoryEnum = ["laptop","mobile","oil"]
+export const categoryEnum = ["laptop","mobile","house-hold","clothes","footwear","beauty-products","grocery","TV","decorative"]
 
 const productSchema = mongoose.Schema({
     name:{
