@@ -1,7 +1,0 @@
-userid-> products homepage pe 			
-homepage category se frequency wise products	
-description search make vector	
-similar products use Dot product                
-associable products                             
-location wise famous product                    
-age group wise famous product								

@@ -2,8 +2,8 @@ import mongoose from "mongoose"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-const stateEnum=["Gujarat","Rajasthan","Maharashtra","Madhya Pradesh","Karnataka","Goa","Punjab","Tamil Nadu"]
-const ageEnum=["Child","Teenager","Young","Adult","Old"]
+export const stateEnum=["Gujarat","Rajasthan","Maharashtra","Madhya Pradesh","Karnataka","Goa","Punjab","Tamil Nadu"]
+export const ageEnum=["Child","Teenager","Young","Adult","Old"]
 
 const userSchema = mongoose.Schema({
     name:{
@@ -15,10 +15,10 @@ const userSchema = mongoose.Schema({
         required:[true,"Please add an email"],
         unique:[true,"email already registered"],
         trim:true,
-        match:[
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            "Please enter a valid email"
-        ]
+        // match:[
+        //     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        //     "Please enter a valid email"
+        // ]
     },
     location:{
         type:String,
