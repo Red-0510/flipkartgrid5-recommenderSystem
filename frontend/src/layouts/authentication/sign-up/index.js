@@ -67,7 +67,7 @@ function SignUp() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 console.log(formData)
-    const {email, password, confirmPassword } = formData;
+    const {email, password, confirmPassword,name,age,location } = formData;
 
     if (email && password && confirmPassword) {
       if (password === confirmPassword) {
@@ -75,7 +75,8 @@ console.log(formData)
           setDisable(true)
           // const name = firstName + " " + lastName
           const userData = {
-            email,password
+            email,password,
+            name,
           }
           const data = await registerUser(userData,dispatch);
           if(!data){
@@ -113,6 +114,15 @@ console.log(formData)
         <Separator />
         <SoftBox pt={2} pb={3} px={3}>
           <SoftBox component="form" role="form">
+          <SoftBox mb={2}>
+              <SoftInput type="text" placeholder="name" name="name" value={formData.name} onChange={handleInputChange}/>
+            </SoftBox>
+            <SoftBox mb={2}>
+              <SoftInput type="text" placeholder="location" name="location" value={formData.location} onChange={handleInputChange}/>
+            </SoftBox>
+            <SoftBox mb={2}>
+              <SoftInput type="text" placeholder="age" name="age" value={formData.age} onChange={handleInputChange}/>
+            </SoftBox>
             <SoftBox mb={2}>
               <SoftInput type="email" placeholder="Email" name="email" value={formData.email} onChange={handleInputChange}/>
             </SoftBox>

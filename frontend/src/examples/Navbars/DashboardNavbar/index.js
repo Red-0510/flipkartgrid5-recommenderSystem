@@ -59,6 +59,7 @@ import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
 import { Padding, ShoppingCart } from "@mui/icons-material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useSelector } from "react-redux";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -98,44 +99,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
   const navigate = useNavigate()
-  // Render the notifications menu
-  const renderMenu = () => (
-    <Menu
-      anchorEl={openMenu}
-      anchorReference={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
-      sx={{ mt: 2 }}
-    >
-      <NotificationItem
-        image={<img src={team2} alt="person" />}
-        title={["New message", "from Laur"]}
-        date="13 minutes ago"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        image={<img src={logoSpotify} alt="person" />}
-        title={["New album", "by Travis Scott"]}
-        date="1 day"
-        onClick={handleCloseMenu}
-      />
-      <NotificationItem
-        color="secondary"
-        image={
-          <Icon fontSize="small" sx={{ color: ({ palette: { white } }) => white.main }}>
-            payment
-          </Icon>
-        }
-        title={["", "Payment successfully completed"]}
-        date="2 days"
-        onClick={handleCloseMenu}
-      />
-    </Menu>
-  );
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
 
 
   return (
@@ -148,35 +112,68 @@ function DashboardNavbar({ absolute, light, isMini }) {
         <SoftBox color="inherit" sx={(theme) => navbarRow(theme, { isMini })} style={{}}>
           <Breadcrumbs icon="home" title={route[route.length - 1]} route={route} light={light} />
         </SoftBox>
-        <SoftBox style={{flex:"0.7",padding:"0.5rem 2rem"}}>
-        <SoftInput
-          placeholder="Type here..."
-          icon={{ component: "search", direction: "right"}}
-          type="Search"
-          size="large"
-        />
+        <SoftBox style={{ flex: "0.7", padding: "0.5rem 2rem" }}>
+          <SoftInput
+            placeholder="Type here..."
+            icon={{ component: "search", direction: "right" }}
+            type="Search"
+            size="large"
+          />
         </SoftBox>
         {isMini ? null : (
           <SoftBox sx={(theme) => navbarRow(theme, { isMini })}>
             <SoftBox color={light ? "white" : "inherit"}>
-              <Link to="/signin">
-                <IconButton sx={navbarIconButton} size="large">
-                  <Icon
-                    sx={({ palette: { dark, white } }) => ({
-                      color: light ? white.main : dark.main,
-                    })}
+              {isLoggedIn ?
+                <SoftBox>
+                  <Link to="/profile">
+                    <IconButton sx={navbarIconButton} size="large">
+                      <Icon
+                        sx={({ palette: { dark, white } }) => ({
+                          color: light ? white.main : dark.main,
+                        })}
+                      >
+                        account_circle
+                      </Icon>
+                      <SoftTypography
+                        variant="button"
+                        fontWeight="medium"
+                        color={light ? "white" : "dark"}
+                      >
+                        Profile
+                      </SoftTypography>
+                    </IconButton>
+                  </Link>
+                  <IconButton
+                    size="small"
+                    sx={navbarIconButton}
+                    aria-controls="notification-menu"
+                    aria-haspopup="true"
+                    variant="contained"
+                    onClick={() => { navigate("/cart") }}
                   >
-                    account_circle
-                  </Icon>
-                  <SoftTypography
-                    variant="button"
-                    fontWeight="medium"
-                    color={light ? "white" : "dark"}
-                  >
-                    Sign in
-                  </SoftTypography>
-                </IconButton>
-              </Link>
+                    {/* <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon> */}
+                    <ShoppingCart fontSize="medium" color="white" />
+                  </IconButton>
+                </SoftBox>
+                :
+                <Link to="/signin">
+                  <IconButton sx={navbarIconButton} size="large">
+                    <Icon
+                      sx={({ palette: { dark, white } }) => ({
+                        color: light ? white.main : dark.main,
+                      })}
+                    >
+                      account_circle
+                    </Icon>
+                    <SoftTypography
+                      variant="button"
+                      fontWeight="medium"
+                      color={light ? "white" : "dark"}
+                    >
+                      Sign in
+                    </SoftTypography>
+                  </IconButton>
+                </Link>}
               {/* <IconButton
                 size="small"
                 color="inherit"
@@ -195,19 +192,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon>settings</Icon>
               </IconButton> */}
-              <IconButton
-                size="small"
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={()=>{navigate("/cart")}}
-              >
-                {/* <Icon className={light ? "text-white" : "text-dark"}>notifications</Icon> */}
-                <ShoppingCart fontSize="medium" />
-              </IconButton>
-              {renderMenu()}
             </SoftBox>
           </SoftBox>
         )}

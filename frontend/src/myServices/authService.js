@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import {SET_LOGIN, SET_USER} from "../redux/authSlice"
+import {SET_LOGIN, SET_LOGOUT, SET_USER} from "../redux/authSlice"
 import { SET_SIMILAR_PRODUCT } from "redux/productSlice";
 import { SET_PRODUCT } from "redux/productSlice";
 import { SET_USER_RECOMMENDATIONS } from "redux/homeProductSlice";
@@ -23,7 +23,8 @@ export const registerUser = async (userData,dispatch) => {
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/user/register`,
-      userData
+      userData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -49,7 +50,8 @@ export const loginUser = async (userData,dispatch) => {
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/user/login`,
-      userData
+      userData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -58,6 +60,7 @@ export const loginUser = async (userData,dispatch) => {
     
     toast.success(data.message);
     await dispatch(SET_LOGIN(true));
+    console.log(data.data)
     await dispatch(SET_USER(data.data));
     return data.data;
 
@@ -73,15 +76,18 @@ export const loginUser = async (userData,dispatch) => {
 // Logout User
 export const logoutUser = async (dispatch) => {
   try {
-    const response = await axios.get(`${BACKEND_URL}/api/user/logout`);
-    const data = response.data
-    if (!data.success) {
-      throw new Error(response)
-    }
+    // const response = await axios.get(`${BACKEND_URL}/api/user/logout`);
+    // const data = response.data
+    // if (!data.success) {
+    //   throw new Error(response)
+    // }
     
-    toast.success(data.message);
     await dispatch(SET_LOGIN(false));
-    await dispatch(SET_USER(initialState));
+    await dispatch(SET_LOGOUT());
+    toast.success("Logout SuccessFul");
+    return {
+      success:true
+    }
   } catch (error) {
     const message =
       (error.response && error.response.data && error.response.data.message) ||
@@ -96,7 +102,8 @@ export const forgotPassword = async (userData) => {
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/user/password`,
-      userData
+      userData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -117,7 +124,8 @@ export const resetPassword = async (userData, resetToken,dispatch) => {
   try {
     const response = await axios.put(
       `${BACKEND_URL}/api/user/resetpassword/${resetToken}`,
-      userData
+      userData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -137,17 +145,19 @@ export const resetPassword = async (userData, resetToken,dispatch) => {
 
 
 // Update Cart
-export const updateCart = async (cartData,dispatch) => {
+export const updateCart = async (cart,dispatch) => {
   try {
     const response = await axios.patch(
       `${BACKEND_URL}/api/user/cart`,
-      cartData
+      {cart},
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
       throw new Error(response)
     }
     toast.success(response.data.message);
+    console.log(data.data)
     await dispatch(SET_USER(data.data));
     return response.data;
   } catch (error) {
@@ -164,7 +174,8 @@ export const addToCart = async (cartData,dispatch) => {
   try {
     const response = await axios.post(
       `${BACKEND_URL}/api/user/cart`,
-      cartData
+      cartData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -186,7 +197,8 @@ export const addToCart = async (cartData,dispatch) => {
 export const updatePurchase = async (dispatch) => {
   try {
     const response = await axios.get(
-      `${BACKEND_URL}/api/user/buy`
+      `${BACKEND_URL}/api/user/buy`,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -204,12 +216,36 @@ export const updatePurchase = async (dispatch) => {
   }
 };
 
+export const getCartProducts = async (ids)=>{
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/api/user/product`,
+      {ids},
+      { withCredentials: true }
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    toast.success(response.data.message);
+    console.log(data.data)
+    return data.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+}
+
 // buy Product
 export const buyProduct = async (productData,dispatch) => {
   try {
     const response = await axios.get(
       `${BACKEND_URL}/api/user/buy`,
-      productData
+      productData,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -231,7 +267,8 @@ export const buyProduct = async (productData,dispatch) => {
 export const getHomeProduct = async (productQuery,dispatch) => {
   try {
     const response = await axios.get(
-      `${BACKEND_URL}/api/product/home`
+      `${BACKEND_URL}/api/product/home`,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -258,6 +295,7 @@ export const getSimilarAndAssociableProduct = async (productId,dispatch) => {
   try {
     const response = await axios.get(
       `${BACKEND_URL}/api/product/singleproduct/${productId}`,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
@@ -282,12 +320,36 @@ export const getSearchResults = async (searchText) => {
     console.log(searchText)
     const response = await axios.get(
       `${BACKEND_URL}/api/product/results/${searchText}`,
+      { withCredentials: true }
     );
     const data = response.data
     if (!data.success) {
       throw new Error(response)
     }
     toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    toast.error(message);
+  }
+};
+
+export const buySingleProduct = async (productData,dispatch) => {
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/api/user/buy`,
+      productData,
+      { withCredentials: true }
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    toast.success(response.data.message);
+    await dispatch(SET_USER(data.data));
     return response.data;
   } catch (error) {
     const message =

@@ -51,10 +51,11 @@ import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Overview() {
   const [purchaseHistory, setPurchaseHistory] = useState([])
-  
+  const {name,email,role,cart,purchases,location} = useSelector(state=>state.auth.user)
   const convert = (product)=>{
     return (
       {
@@ -71,24 +72,9 @@ function Overview() {
     )
   }
 
-  const dummy = [
-    {
-      name:"p1",
-      image:"aaca",
-      description:"this is desc",
-      price:"1234",
-    },
-    {
-      name:"p2",
-      image:"aaca",
-      description:"this is desc",
-      price:"1234",
-    }
-  ]
-
   useEffect(()=>{
-    const convertdummy = dummy.map(p=>convert(p));
-    setPurchaseHistory(convertdummy);
+    const convertpurchases = purchases.map(p=>convert(p));
+    setPurchaseHistory(convertpurchases);
   },[])
 
   return (
@@ -102,10 +88,10 @@ function Overview() {
               title="profile information"
               description=""
               info={{
-                fullName: "Alec M. Thompson",
-                mobile: "(44) 123 1234 123",
-                email: "alecthompson@mail.com",
-                location: "USA",
+                fullName: name,
+                mobile: "+91 98459 26538",
+                email: email,
+                location: location,
               }}
               social={[
                 {

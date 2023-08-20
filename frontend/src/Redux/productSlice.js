@@ -10,7 +10,8 @@ const initialState = {
     rating:0,
     description:"",
     price:0,
-    image:""
+    image:"",
+    id:""
   },
   similarProducts:[],
   associableProducts:[],
@@ -29,6 +30,7 @@ const productSlice = createSlice({
         state.product.description = profile.description;
         state.product.price = profile.price;
         state.product.image = profile.image;
+        state.product.id = profile._id
     },
     SET_SIMILAR_PRODUCT(state,action){
         state.similarProducts=action.payload;

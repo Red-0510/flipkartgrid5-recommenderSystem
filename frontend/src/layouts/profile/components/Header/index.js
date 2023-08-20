@@ -42,10 +42,17 @@ import breakpoints from "assets/theme/base/breakpoints";
 import burceMars from "assets/images/bruce-mars.jpg";
 import curved0 from "assets/images/curved-images/curved0.jpg";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { logoutUser } from "myServices/authService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { selectIsLoggedIn } from "redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
   const [tabsOrientation, setTabsOrientation] = useState("horizontal");
   const [tabValue, setTabValue] = useState(0);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // A function that sets the orientation state of the tabs.
@@ -68,6 +75,14 @@ function Header() {
   }, [tabsOrientation]);
 
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+
+  const handleLogout = async()=>{
+    const logout = await logoutUser(dispatch);
+    if(logout.success){
+      navigate("/")
+    }
+  }
 
   return (
     <SoftBox position="relative">
@@ -131,7 +146,7 @@ function Header() {
               >
                 <Tab label="Doc" icon={<Cube />} />
                 <Tab label="Message" icon={<Document />} />
-                <Tab label="Settings" icon={<Settings />} />
+                {isLoggedIn && <Tab label="logout" icon={<Cube />} onClick={handleLogout} />}
               </Tabs>
             </AppBar>
           </Grid>

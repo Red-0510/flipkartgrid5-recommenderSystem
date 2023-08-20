@@ -32,7 +32,7 @@ function SingleProduct() {
     }
 
     fetchData();
-  }, [])
+  }, [id])
 
   return (
     <SoftBox style={{ margin: "2rem auto" }}>

@@ -4,18 +4,20 @@ import User from "../models/User.js";
 export const sendToken = (user,res)=>{
 
     const token = user.getJWTToken();
-    const options = {
-        path:"/",
-        expires:new Date(Date.now() + 1000 * 60 * 60), // 1hr
-        httpOnly:true,
-        sameSite:"lax"
-    }
-    res.cookie(String(user._id),token,options)
+    res.cookie("token",token,{
+        httpOnly: false,
+        expires : new Date(Date.now() + 1000 * 86400),
+        sameSite:'none',
+        secure:true,
+    });
 }
 
 export const userAuth = async (req,res,next) =>{
     try{
-        const token = req.headers.cookie?.split("=")[1];
+        // console.log(req.cookies)
+        // const token = req.cookies.cookie?.split("=")[1];
+        const token = req.cookies.token;
+        // console.log(token)
         if(!token || token.length<=6){
             res.status(400)
             throw new Error("Token Expired Please Log in")
@@ -28,7 +30,7 @@ export const userAuth = async (req,res,next) =>{
         //     throw new Error("Use admin routes for admin works")
         // }
         const user =await User.findById(data.id).select("-password")
-        console.log(user);
+        // console.log(user);
         req.user = user
         next()
     }

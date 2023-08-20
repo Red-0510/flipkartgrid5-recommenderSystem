@@ -1,5 +1,5 @@
 import express from "express"
-import { addToCart, buyProduct, changePassword, forgotPassword, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart, updatedPurchase } from "../controllers/userController.js"
+import { addToCart, buyProduct, changePassword, forgotPassword, getProductsFromIds, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart, updatedPurchase } from "../controllers/userController.js"
 import { adminAuth, userAuth } from "../utils/auth.js"
 
 
@@ -10,6 +10,8 @@ router.post("/register",registerUser);
 router.route("/cart")
         .post(userAuth,addToCart)
          .patch(userAuth,updateCart)
+
+router.post('/product',userAuth,getProductsFromIds)
 
 router.route("/buy")
         .get(userAuth,updatedPurchase)

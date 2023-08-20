@@ -1,52 +1,121 @@
-import {useState} from 'react';
+import { useEffect, useState } from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
-import { Button, IconButton, Rating } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Rating, Typography } from '@mui/material';
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import SoftBox from 'components/SoftBox';
+import { useSelector } from 'react-redux';
+import MyCard from './MyCard';
+import { getCartProducts } from 'myServices/authService';
+import { AddShoppingCart } from '@mui/icons-material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function MyCart() {
-    var [value,setValue] = useState()
-    var [num,setNum] = useState(0)
-  return (
-    <div style={{display:"flex", alignItems:"center",justifyContent:"center",margin:"2rem auto",height:"auto",overflowY:"hidden"}}>
+  const itemIds = useSelector(state => state.auth.user.cart);
 
-    <ImageList cols={1} sx={{ width:"30%"}}>
-      {itemData.map((item) => (
-        <ImageListItem key={item.img}>
-          <img
-            src={`${item.img}?w=248&fit=crop&auto=format`}
-            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-            alt={item.title}
-            loading="lazy"
-            height="auto"
-          />
-          <ImageListItemBar
-            title={item.title}
-            subtitle={<span>by: {item.author}</span>}
-            position="below"
-          />
-          <Rating
-            name="simple-controlled"
-            value={value}
-            onClickCapture={(event, newValue) => {
-                setValue(newValue);
-            }} 
-          />
-          <SoftBox>
-          <IconButton onClick={()=>{setNum(num==1?num=1:num--)}}><RemoveOutlinedIcon style={{display:"inline"}}/></IconButton>
-            <p style={{display:"inline"}}>{num}</p>
-          <IconButton onClick={()=>{setNum(num++)}} ><AddOutlinedIcon style={{display:"inline"}}/> </IconButton> 
-            </SoftBox>       
-          <Button variant="contained" color="success">
-            BUY
-          </Button>
-        </ImageListItem>
-      ))}
-    </ImageList>
-      </div>
+  var [value, setValue] = useState()
+  var [num, setNum] = useState(1)
+  const [itemData, setItemData] = useState([]);
+
+  useEffect(async () => {
+    console.log("Here")
+    async function fetch(){
+      const result = await getCartProducts(itemIds);
+      setItemData(result);
+    }
+    await fetch()
+  }, [])
+
+  const handleProductClick = (id)=>{
+    console.log(id)
+    navigate(`/singleproduct/${id}`)
+  }
+
+  function truncateDescription(text, maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.slice(0, maxLength - 3) + "...";
+    }
+  }
+
+  const products = itemData.map((product, index) => (
+    <Card sx={{ height: "80%", width: "20rem", margin: "1rem" }} key={index}>
+      <CardHeader
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={product.name}
+      />
+      <CardMedia
+        component="img"
+        height="194"
+        image={product.image}
+        alt="Paella dish"
+        onClick={()=>handleProductClick(product._id)}
+      />
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {truncateDescription(product.description, 50)}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" title="Add to Favourite">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share" title="Share">
+          <ShareIcon />
+        </IconButton>
+        <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(product._id)}>
+          <AddShoppingCart />
+        </IconButton>
+      </CardActions>
+    </Card>
+  ))
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", margin: "2rem auto", height: "auto", overflowY: "hidden" }}>
+
+      <ImageList cols={1} sx={{ width: "30%" }}>
+        { products}
+      </ImageList>
+    </div>
+    //     <ImageListItem key={item.img}>
+    //       <img
+    //         src={`${item.image}?w=248&fit=crop&auto=format`}
+    //         srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+    //         alt={item.name}
+    //         loading="lazy"
+    //         height="auto"
+    //       />
+    //       <ImageListItemBar
+    //         title={item.name}
+    //         subtitle={<span>company: {item.company}</span>}
+    //         position="below"
+    //       />
+    //       <Rating
+    //         name="simple-controlled"
+    //         value={Math.floor(item.rating)}
+    //         // onClickCapture={(event, newValue) => {
+    //         //     setValue(newValue);
+    //         // }} 
+    //       />
+    //       <SoftBox>
+    //       <IconButton onClick={()=>{setNum(num==1?num=1:num--)}}><RemoveOutlinedIcon style={{display:"inline"}}/></IconButton>
+    //         <p style={{display:"inline"}}>{num}</p>
+    //       <IconButton onClick={()=>{setNum(num++)}} ><AddOutlinedIcon style={{display:"inline"}}/> </IconButton> 
+    //         </SoftBox>       
+    //       <Button variant="contained" color="success">
+    //         BUY
+    //       </Button>
+    //     </ImageListItem>
   );
 }
 

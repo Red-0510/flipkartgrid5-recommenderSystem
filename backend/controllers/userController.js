@@ -9,7 +9,7 @@ import Product from "../models/Product.js"
 
 export const registerUser = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body
+        const { name, email, password,age,location } = req.body
 
         if (!password || !email) {
             res.status(400)
@@ -30,11 +30,11 @@ export const registerUser = async (req, res, next) => {
         }
 
         const user = await User.create({
-            name, email, password
+            name, email, password,age,location
         })
 
         if (user) {
-            const { _id, email, name, role } = user
+            const { _id, email, name, role,age,location } = user
 
             sendToken(user, res);
 
@@ -42,7 +42,7 @@ export const registerUser = async (req, res, next) => {
                 success: "true",
                 message: "User Registered Successfully",
                 data: {
-                    _id, email, name, role,
+                    _id, email, name, role,age,location
                 }
             })
         }
@@ -274,6 +274,27 @@ export const resetPassword = async (req, res, next) => {
     }
 }
 
+export const getProductsFromIds = async (req,res,next)=>{
+    try{
+        const {ids} = req.body;
+        const products = []
+        console.log(ids)
+        for (const product of ids){
+            const p = await Product.findById(product.productId)
+            products.push(p)
+        }
+        console.log(products)
+        res.status(200).json({
+            success:true,
+            message:"Products Fetched Successfully",
+            data:products
+        })
+    }
+    catch(err){
+        next(err)
+    }
+}
+
 export const updateCart = async (req, res, next) => {
     try {
         const { cart } = req.body
@@ -396,7 +417,7 @@ export const updatedPurchase = async (req, res, next) => {
 
 export const buyProduct = async (req,res,next)=>{
     try {
-        const {productId,quantity,userId} = req.body;
+        const {productId,quantity} = req.body;
         // productId, quantity, transaction create, user purchase
         const findProductId = await Product.findById(productId);
         if(!findProductId){
@@ -407,7 +428,7 @@ export const buyProduct = async (req,res,next)=>{
             res.status(404)
             throw new Error("Invalid Qunatity");
         }
-        const findUser = await User.findById(userId);
+        const findUser = await User.findById(req.user._id);
         const date=Date.now()
        
         const transaction = await Transaction.create({

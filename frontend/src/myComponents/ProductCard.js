@@ -16,10 +16,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { AddShoppingCart } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SoftBox from 'components/SoftBox';
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import 'react-horizontal-scrolling-menu/dist/styles.css';
+import { Button } from '@mui/material';
+import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { buySingleProduct } from 'myServices/authService';
+import { toast } from 'react-toastify';
+import { selectIsLoggedIn } from 'redux/authSlice';
+import { updateCart } from 'myServices/authService';
 
 
 const ExpandMore = styled((props) => {
@@ -36,11 +43,13 @@ const ExpandMore = styled((props) => {
 export default function ProductCard() {
   const [expanded, setExpanded] = React.useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const similarProductsCards = useSelector(state => state.product.similarProducts);
   const associableProductsCards = useSelector(state => state.product.associableProducts);
   const singleProductsCards = useSelector(state => state.product.product);
-
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+  const cart = useSelector(state=>state.auth.user.cart)
+  
   function truncateDescription(text, maxLength) {
     if (text.length <= maxLength) {
       return text;
@@ -48,6 +57,52 @@ export default function ProductCard() {
       return text.slice(0, maxLength - 3) + "...";
     }
   }
+  var [num,setNum] = React.useState(0)
+
+  const handleCartClick = async (id)=>{
+    if(isLoggedIn){
+      let product = {
+        productId:id,
+        time:Date.now(),
+        quantity:1
+      }
+      let cartProducts = cart;
+      let isAdded=false;
+      const updateProducts = cartProducts.map(p=>{
+        if(p.productId==id){
+          isAdded=true
+          return {
+            ...p,
+            quantity:p.quantity+1
+          }
+        }
+        else{
+          return p
+        }
+      });
+      if(!isAdded){
+        updateProducts.push(product)
+      }
+      // const index = cartProducts.findIndex(p=>p.productId==id)
+      // if(index!=-1){
+      //   cartProducts[index]={
+      //     ...cartProducts[index],
+      //     quantity:cartProducts[index].quantity+1
+      //   }
+      console.log(updateProducts)
+      const response = await updateCart(updateProducts,dispatch)
+      navigate("/cart")
+    }
+    else{
+      navigate("/signin")
+    }
+  }
+
+  const handleProductClick = (id)=>{
+    console.log(id)
+    navigate(`/singleproduct/${id}`)
+  }
+
 
   const similarProductsCardsComps = similarProductsCards.map((product, index) => (
     <Card sx={{ height: "80%", width: "20rem", margin: "1rem" }} key={index}>
@@ -64,6 +119,7 @@ export default function ProductCard() {
         height="194"
         image={product.image}
         alt="Paella dish"
+        onClick={()=>handleProductClick(product._id)}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
@@ -77,7 +133,7 @@ export default function ProductCard() {
         <IconButton aria-label="share" title="Share">
           <ShareIcon />
         </IconButton>
-        <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+        <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(product._id)}>
           <AddShoppingCart />
         </IconButton>
       </CardActions>
@@ -112,12 +168,34 @@ export default function ProductCard() {
         <IconButton aria-label="share" title="Share">
           <ShareIcon />
         </IconButton>
-        <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+        <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(product._id)}>
           <AddShoppingCart />
         </IconButton>
       </CardActions>
     </Card>
   ))
+
+  const handleBuy= async ()=>{
+    try {
+      const productData = {
+        productId : singleProductsCards.id,
+        quantity : num
+      }
+      if(num==0){
+        throw new Error("please increase the quantity")
+      }
+      const response = await buySingleProduct(productData, dispatch);
+      if(!response.success){
+        throw new Error("transaction failed");
+      }
+      toast.success("Product purchased successfully")
+      navigate("/")
+    } catch (err) {
+      toast.error(err.message)
+    }
+    // console.log("hello")
+  }
+
 
   return (
     <SoftBox>
@@ -149,9 +227,15 @@ export default function ProductCard() {
             <IconButton aria-label="share" title="Share">
               <ShareIcon />
             </IconButton>
-            <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+            <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(singleProductsCards.id)}>
               <AddShoppingCart />
             </IconButton>
+            <IconButton onClick={()=>{setNum(num==0?num=0:--num)}}><RemoveOutlinedIcon style={{display:"inline"}}/></IconButton>
+            <p style={{display:"inline"}}>{num}</p>
+          <IconButton onClick={()=>{setNum(++num)}} ><AddOutlinedIcon style={{display:"inline"}}/> </IconButton>       
+          <Button variant="contained" color="success" onClick={handleBuy}>
+            BUY
+          </Button>
           </CardActions>
         </Card>
       </SoftBox>
