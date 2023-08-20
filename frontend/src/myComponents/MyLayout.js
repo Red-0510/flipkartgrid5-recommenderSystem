@@ -5,9 +5,9 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 
 export default function MyLayout() {
-    console.log("layout")
+    // console.log("layout")
   return (
-    <SoftBox>
+    <SoftBox sx={{backgroundColor:"black"}}>
         {/* <DashboardNavbar /> */}
         <Header />
         <SoftBox sx={{margin:"3rem"}}>

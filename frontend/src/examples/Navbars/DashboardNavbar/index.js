@@ -137,6 +137,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     </Menu>
   );
 
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -150,10 +151,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
         <SoftBox style={{flex:"0.7",padding:"0.5rem 2rem"}}>
         <SoftInput
           placeholder="Type here..."
-          icon={{ component: "search", direction: "right" }}
+          icon={{ component: "search", direction: "right"}}
           type="Search"
           size="large"
-          onSubmit={()=>{console.log("submited")}}
         />
         </SoftBox>
         {isMini ? null : (
@@ -217,17 +217,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
 }
 
 // Setting default values for the props of DashboardNavbar
-DashboardNavbar.defaultProps = {
-  absolute: false,
-  light: false,
-  isMini: false,
-};
+// DashboardNavbar.defaultProps = {
+//   absolute: false,
+//   light: false,
+//   isMini: false,
+// };
 
-// Typechecking props for the DashboardNavbar
-DashboardNavbar.propTypes = {
-  absolute: PropTypes.bool,
-  light: PropTypes.bool,
-  isMini: PropTypes.bool,
-};
+// // Typechecking props for the DashboardNavbar
+// DashboardNavbar.propTypes = {
+//   absolute: PropTypes.bool,
+//   light: PropTypes.bool,
+//   isMini: PropTypes.bool,
+// };
 
 export default DashboardNavbar;

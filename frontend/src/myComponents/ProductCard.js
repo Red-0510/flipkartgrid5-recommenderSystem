@@ -16,7 +16,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { AddShoppingCart } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
+import SoftBox from 'components/SoftBox';
+import { ScrollMenu } from 'react-horizontal-scrolling-menu';
+import 'react-horizontal-scrolling-menu/dist/styles.css';
 
 
 const ExpandMore = styled((props) => {
@@ -32,39 +35,39 @@ const ExpandMore = styled((props) => {
 
 export default function ProductCard() {
   const [expanded, setExpanded] = React.useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  const similarProductsCards = useSelector(state => state.product.similarProducts);
+  const associableProductsCards = useSelector(state => state.product.associableProducts);
+  const singleProductsCards = useSelector(state => state.product.product);
 
-  return (
-    <Card sx={{ maxWidth: 345 }}>
+  function truncateDescription(text, maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.slice(0, maxLength - 3) + "...";
+    }
+  }
+
+  const similarProductsCardsComps = similarProductsCards.map((product, index) => (
+    <Card sx={{ height: "80%", width: "20rem", margin: "1rem" }} key={index}>
       <CardHeader
-        // avatar={
-        //   <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-        //     R
-        //   </Avatar>
-        // }
         action={
           <IconButton aria-label="settings">
             <MoreVertIcon />
           </IconButton>
         }
-        title="Shrimp and Chorizo Paella"
-        subheader="September 14, 2016"
+        title={product.name}
       />
       <CardMedia
         component="img"
         height="194"
-        image="https://www.google.com/logos/doodles/2023/india-independence-day-2023-6753651837110072-l.webp"
+        image={product.image}
         alt="Paella dish"
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          {truncateDescription(product.description, 50)}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -74,47 +77,104 @@ export default function ProductCard() {
         <IconButton aria-label="share" title="Share">
           <ShareIcon />
         </IconButton>
-        <IconButton aria-label="cart" title="Add to Cart" onClick={()=>{navigate("/cart")}}>
-            <AddShoppingCart />
+        <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+          <AddShoppingCart />
         </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set
-            aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-            large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-            stirring often until thickened and fragrant, about 10 minutes. Add
-            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is absorbed,
-            15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp and
-            mussels, tucking them down into the rice, and cook again without
-            stirring, until mussels have opened and rice is just tender, 5 to 7
-            minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then serve.
-          </Typography>
-        </CardContent>
-      </Collapse>
     </Card>
+  ))
+
+  const associableProductsCardsComps = associableProductsCards.map((product, index) => (
+    <Card sx={{ height: "80%", width: "20rem", margin: "1rem" }} key={index}>
+      <CardHeader
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={product.name}
+      />
+      <CardMedia
+        component="img"
+        height="194"
+        image={product.image}
+        alt="Paella dish"
+      />
+      <CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {truncateDescription(product.description, 50)}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites" title="Add to Favourite">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share" title="Share">
+          <ShareIcon />
+        </IconButton>
+        <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+          <AddShoppingCart />
+        </IconButton>
+      </CardActions>
+    </Card>
+  ))
+
+  return (
+    <SoftBox>
+      <SoftBox sx={{ display: "flex", alignItem: "center", justifyContent: "center" }}>
+        <Card sx={{ height: "80%", width: "30%", margin: "1rem" }}>
+          <CardHeader
+            action={
+              <IconButton aria-label="settings">
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={singleProductsCards.name}
+          />
+          <CardMedia
+            component="img"
+            height="194"
+            image={singleProductsCards.image}
+            alt="Paella dish"
+          />
+          <CardContent>
+            <Typography variant="body2" color="text.secondary">
+              {truncateDescription(singleProductsCards.description, 50)}
+            </Typography>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites" title="Add to Favourite">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="share" title="Share">
+              <ShareIcon />
+            </IconButton>
+            <IconButton aria-label="cart" title="Add to Cart" onClick={() => { navigate("/cart") }}>
+              <AddShoppingCart />
+            </IconButton>
+          </CardActions>
+        </Card>
+      </SoftBox>
+
+
+      <SoftBox>
+        <h2>Similar Products</h2>
+        <ScrollMenu>
+          {similarProductsCardsComps}
+        </ScrollMenu>
+      </SoftBox>
+
+            <br />
+            <hr />
+            <br />
+
+      <SoftBox>
+        <h2>Frequently Brought together</h2>
+        <ScrollMenu>
+          {associableProductsCardsComps}
+        </ScrollMenu>
+      </SoftBox>
+
+    </SoftBox>
   );
 }
