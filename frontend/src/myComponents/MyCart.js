@@ -14,27 +14,44 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { toast } from 'react-toastify';
 
 export default function MyCart() {
   const itemIds = useSelector(state => state.auth.user.cart);
 
-  var [value, setValue] = useState()
+  var [value, setValue] = useState(0)
   var [num, setNum] = useState(1)
   const [itemData, setItemData] = useState([]);
 
+  // useEffect(async () => {
+  //   // console.log("Here")
+  //   async function fetch(){
+  //   try {
+  //       const result = await getCartProducts(itemIds);
+  //       setItemData(result);
+  //     } catch (error) {
+  //       toast.error(error)
+  //     }
+  //   }
+  //   fetch()
+  // }, [])
   useEffect(async () => {
-    console.log("Here")
-    async function fetch(){
+    try {
       const result = await getCartProducts(itemIds);
       setItemData(result);
+    } catch (error) {
+      toast.error(error);
     }
-    await fetch()
-  }, [])
+  }, []);
 
   const handleProductClick = (id)=>{
     console.log(id)
     navigate(`/singleproduct/${id}`)
   }
+
+  // const handleCartClick = (id)=>{
+
+  // }
 
   function truncateDescription(text, maxLength) {
     if (text.length <= maxLength) {
@@ -73,9 +90,9 @@ export default function MyCart() {
         <IconButton aria-label="share" title="Share">
           <ShareIcon />
         </IconButton>
-        <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(product._id)}>
+        {/* <IconButton aria-label="cart" title="Add to Cart" onClick={()=>handleCartClick(product._id)}>
           <AddShoppingCart />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   ))

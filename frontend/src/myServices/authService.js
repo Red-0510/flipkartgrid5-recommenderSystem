@@ -216,6 +216,30 @@ export const updatePurchase = async (dispatch) => {
   }
 };
 
+export const interact = async (point,productId)=>{
+  try {
+    const response = await axios.post(
+      `${BACKEND_URL}/api/user/interact`,
+      {
+        point,productId
+      },
+      { withCredentials: true }
+    );
+    const data = response.data
+    if (!data.success) {
+      throw new Error(response)
+    }
+    return data.success
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+      console.log(message)
+    // toast.error(message);
+  }
+}
+
 export const getCartProducts = async (ids)=>{
   try {
     const response = await axios.post(

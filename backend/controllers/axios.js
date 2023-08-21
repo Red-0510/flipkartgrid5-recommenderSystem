@@ -30,8 +30,8 @@ export const getHomeProductsModel = async (userId) => {
   export const getSingleProductModel = async (productId) => {
     try {
       const response = await axios.post(
-        `${fastAPIurl}/singleproduct/${productId}`,
-        userId
+        `${fastAPIurl}/singleproduct`,
+        productId
       );
       const data = response.data
       console.log(data)

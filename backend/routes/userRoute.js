@@ -1,7 +1,7 @@
 import express from "express"
 import { addToCart, buyProduct, changePassword, forgotPassword, getProductsFromIds, getUser, loginUser, logoutUser, registerUser, resetPassword, updateCart, updatedPurchase } from "../controllers/userController.js"
 import { adminAuth, userAuth } from "../utils/auth.js"
-
+import { createInteraction } from "../controllers/interactionController.js"
 
 const router = express.Router()
 
@@ -29,6 +29,8 @@ router.route("/password")
     .post(forgotPassword)
 
 router.put("/resetpassword/:resetToken",resetPassword)
+
+router.post("/interaction",createInteraction)
 
 
 //admin routes

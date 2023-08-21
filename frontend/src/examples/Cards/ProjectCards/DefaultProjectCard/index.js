@@ -164,9 +164,9 @@ function DefaultProjectCard({ image, label, title, description, action, authors,
 }
 
 // Setting default values for the props of DefaultProjectCard
-DefaultProjectCard.defaultProps = {
-  authors: [],
-};
+// DefaultProjectCard.defaultProps = {
+//   authors: [],
+// };
 
 // Typechecking props for the DefaultProjectCard
 // DefaultProjectCard.propTypes = {
